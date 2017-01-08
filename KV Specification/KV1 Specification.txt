@@ -11,7 +11,7 @@ Data types:
 Comments:
 	- Comments are supported; any characters following a double slash (//) is considered a comment.
 
-Descriptions:
+Descriptors:
 	- Each variable can have a description assigned to it.
 	- A description is a string associated with the variable. The purpose is to allow user descriptions of variables to be saved.
 	- A description is a comment following a variable declaration (same line).
