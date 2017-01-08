@@ -1,0 +1,59 @@
+This document describes the defining factors to the .KV1 Version 1 file specification.
+
+Data types:
+	- KV1 files can store 4 data types universal to K-Programs.
+		- KMatrix
+		- Double
+		- String
+		- Bool
+	- Integers are not supported because doubles can represent the same data.
+
+Comments:
+	- Comments are supported; any characters following a double slash (//) is considered a comment.
+
+Descriptions:
+	- Each variable can have a description assigned to it.
+	- A description is a string associated with the variable. The purpose is to allow user descriptions of variables to be saved.
+	- A description is a comment following a variable declaration (same line).
+
+Headers:
+	- A header is a special type of comment (multiple lines permitted).
+	- Only one header is allowed per file.
+	- A header is created by encompassing lines containing text with the macro "HEADER".
+	- Headers are intended to be used as a description of the file and its contents.
+
+Macros:
+	- Macros are keywords in a KV1 file used to specify special sections in the file.
+	- A macro is always written in all caps and follows the pound sign (#).
+		- VERSION: Must be followed by a space and then a decimal number specifying the version of the KV1 specification used in the file. 
+				This macro is required in all KV1 files. 
+				This macro may only appear once in a KV1 file.
+				This macro must always be the first line in the file.
+		- HEADER: Encompasses lines of text that define the file's header.
+				This macro may only appear twice in a KV1 file (to surround text).
+
+Variable Syntax:
+	-The syntax for declaring a variable is like so:
+		1.) The first word must be the datatype. Options include:
+			- double
+			- string
+			- matrix
+			- bool
+		2.) The second word must be the variable's name. The C programming language variable naming requirements apply here.
+		3.) The third word must be an equals sign (=).
+		4.) The fourth word is the value (sometimes this is more than one word).
+			- Doubles require a number (decimals, negatives, and scientific notation allowed).
+			- Strings require a string encased in double quotes.
+			- Bools require a boolean value signified with 'True' or 'False'.
+			- Matricies require a matrix surrounded by square brackets, formatted with commas between values sharing a row, and semicolons deliniating between rows.
+				A matrix may be broken into multiple lines in the KV1 file. Tabs and spaces will be ignored so it can be formatted for easy manual reading.
+		5.) The final character must be a semicolon.
+	e.g. double double_var = 4.556;
+	e.g. string string_var = "Hello world\nI am a second line.";
+	e.g. bool bool_var = True;
+	e.g. matrix matrix_var = [1,2,3;4,5,6;7,8,9];
+	e.g. matrix matrix_var2 = [1, 2, 3;
+							   4, 5, 6;
+							   7, 8, 9];
+
+
