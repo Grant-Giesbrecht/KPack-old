@@ -23,10 +23,6 @@ string best_quote = "Do. Or do not. There is no try.\n\t- Yoda";
 
 matrix identity_single_line = [1, 0, 0; 0, 1, 0; 0, 0, 1]; //Variable descirptions do NOT require semicolons at the end.
 
-matrix identity_multi_line = [1, 0, 0;
-							  0, 1, 0;
-							  0, 0, 1];
-
 bool coke_is_better_than_pepsi = True;
 
 // Variable declarations do not require empty lines inbetween them.
