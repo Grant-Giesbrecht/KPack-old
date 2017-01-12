@@ -1,0 +1,62 @@
+#VERSION 1.0
+
+#HEADER
+This is a multiline
+header.
+#HEADER
+
+double Pi = 3.1415926535;
+double two = 2.0; //This is a descriptor in a KV1 file. Wooooo
+
+string quote = "Do. Or do not. There is no try. - Yoda"; //<- Best quote ever.
+string string_var = "This is a string. Woooo";
+
+int two = 2; //The rule of 2.
+int int_var = 1000000;
+
+bool bool_1 = True;
+bool bool_2 = False; //FALSE
+
+matrix m1 = [ 1.0, 2.0, 3.0; 4.0, 5.0, 6.0; 7.0, 8.0, 9.0];
+
+//Equals sign must be surrounded by white space
+//White space required between double slash descriptor & semicolon ender.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+           __________		   
+	______|     *    |  KV-1
+   |______|    ______|________
+  __/              CCCP       \
+ /_____________________________\
+  \  \/   \/   \/   \/   \/   /
+   \_________________________/
+
+
+   		   __________
+    ______|          |
+   |______|    *     | KV-2
+     _____|    ______|________
+  __/              CCCP       \
+ /_____________________________\
+  \  \/   \/   \/   \/   \/   /
+   \_________________________/
