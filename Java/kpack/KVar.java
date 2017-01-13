@@ -42,6 +42,8 @@ public class KVar{
 
 		print_out = true;
 		matrix_same_line = true;
+		print_descriptors = true;
+		last_filename = new String("---");
 
 		//newline
 		newline = System.getProperty("Line.separator");
@@ -78,6 +80,13 @@ public class KVar{
 		matrix_descriptors.clear();
 		matrix_list.clear();
 		matrix_vnames.clear();
+	}
+
+	//--------------------------------------------------
+	//-------------- SETTINGS MEATHODS -----------------
+
+	public void print_descriptors(boolean prnt){
+		print_descriptors = prnt; 
 	}
 
 	//--------------------------------------------------
@@ -260,6 +269,8 @@ public class KVar{
 			}
 		}
 
+		last_filename = filename;
+
 		return true;
 	}
 
@@ -295,7 +306,7 @@ public class KVar{
 				if (line.length() == 0) continue;
 
 				//Parse string
-				ensure_whitespace(line, "[],;");
+				line = ensure_whitespace(line, "[],;");
 				String[] words = line.split("\\s");
 
 				// for (int i = 0 ; i < words.length ; i++){
@@ -442,6 +453,11 @@ public class KVar{
 						String content_str = new String("");
 						for (int i = 3 ; i < words.length ; i++){
 
+							//Skip empty strings
+							if (words[i].length() <= 0){
+								continue;
+							}
+
 							//Is first component of content
 							if (i == 3 && words[3].charAt(0) != '\"'){
 								if (print_out) System.out.println("ERROR: Line " + line_num + " - String requires encompasing double quotes.");
@@ -449,6 +465,7 @@ public class KVar{
 							}else if (i == 3){
 								words[3] = words[3].substring(1); //Remove double quote on first element of content
 							}
+
 							
 
 							//Is last element of content
@@ -458,23 +475,23 @@ public class KVar{
 									
 									//Verify semicolon syntax
 									if ( words[i].length() >= j+2 && words[i].charAt(j+1) == ';' ){// Semicolon is next character 
-										words[i] = words[i].substring(0, words[i].length() - 2); //Eliminate double quote and semicolon
+										words[i] = words[i].substring(0, words[i].length() - 1); //Eliminate double quote and semicolon
 									}else if( words.length >= i+2 && words[i+1].charAt(0) == ';' ){ //Semicolon is first character of next word
-										words[i] = words[i].substring(0, words[i].length() -  2); //Eliminate double quote from word
+										words[i] = words[i].substring(0, words[i].length() -  1); //Eliminate double quote from word
 										words[i+1] = words[i+1].substring(1, words[i+1].length()); //Eliminate semicolon from next word
 									}else{ //No semicolon - fail
 										if (print_out) System.out.println("ERROR: Failed to locate ending semicolon in line " + line_num);
 										return false;
 									}
-
 								}
 							}
 
 							//Check if beginning descriptor
-							if (words[i].charAt(0) == '/' && words[i].length() >= 2 && words[i].charAt(1) == '/'){
+							if ( words[i].length() > 0 && words[i].charAt(0) == '/' && words[i].length() >= 2 && words[i].charAt(1) == '/'){
 								in_descriptor = true;
 								words[i] = words[i].substring(2);
 							}
+							
 
 							//Check final categories for word categorezation
 							if (in_content){ //In content
@@ -506,25 +523,46 @@ public class KVar{
 
 					try{
 
-						// //Syntax check
-						// if (!words[2].equals("=")) return false;
-						// if (words[3].charAt(0) != '[') return false;
-						// // if (wordswords[3] = words[3].substring(1);
+						//Syntax check
+						if (!words[2].equals("=")) return false;
+						if (words[3].charAt(0) != '[') return false;
+						// if (wordswords[3] = words[3].substring(1);
 						
-						// String interpret = new String();
+						String interpret = new String();
 
-						// for (int i  = 3 ; i < words.length ; i++){
-						// 	interpret = interpret + " " + words[i];
-						// 	if (words[i].charAt(0) == ']'){
-						// 		break;
-						// 	}
-						// }
+						int i;
+						for (i  = 4 ; i < words.length ; i++){
+							if (words[i].charAt(0) == ']'){
+								i += 2;
+								break;
+							}
+							interpret = interpret + " " + words[i];
+						}
 
-						// KMatrix nm = new KMatrix(interpret);
+						KMatrix nm = new KMatrix(interpret);	
 
-						// String descriptor = new String();
+						String descriptor = new String();
+						boolean first = true;
+						for ( ; i < words.length ; i++){
 
-						// add_matrix(words[1], nm, descriptor);
+							if (words[i].length() == 0) continue;
+
+							if (first){
+								first = false;
+								if (words[i].charAt(0) != '/' || words[i].length() < 2 || words[i].charAt(1) != '/'){
+									System.out.println("No doubleslash: " + words[i] + ", " + words[i].charAt(0) + ", " + words[i].length() + ", " + words[i].charAt(1));
+									return false;
+								}
+								words[i] = words[i].substring(2);
+								if (words[i].length() == 0) continue;
+							}
+
+							if (descriptor.length() > 0) descriptor = descriptor + ' ';
+							descriptor = descriptor + words[i];						
+
+						}
+
+						add_matrix(words[1], nm, descriptor);
 
 					}catch(Exception e){
 						if (print_out) System.out.println("ERROR: Failed on line " + line_num + "\n" + e);
@@ -555,6 +593,7 @@ public class KVar{
 			}
 		}
 
+		last_filename = filename;
 		return true;
 	}
 
@@ -563,63 +602,68 @@ public class KVar{
 
 	public void print(){
 
+		System.out.println("Filename: " + last_filename);
 		System.out.println("Version: " + version);
-		System.out.println("Header: " + header + "<END HEADER");
+		System.out.println("Header: \n" + header + "\n:EOH\n");
 
 		//Doubles
 		for (int i = 0 ; i < double_list.size() ; i++){
 			if (i == 0) System.out.println("DOUBLES:");
 			System.out.print("\t" + double_vnames.get(i) + " = " + double_list.get(i));
-			if (double_descriptors.get(i).length() > 0){
-				System.out.println(" DESC: " + double_descriptors.get(i));
+			if (print_descriptors && double_descriptors.get(i).length() > 0){
+				System.out.println("\n\t\tDESC: " + double_descriptors.get(i));
 			}else{
 				System.out.println();	
 			}
 		}
+		if (double_list.size() > 0) System.out.println();
 
 		//Ints
 		for (int i = 0 ; i < int_list.size() ; i++){
 			if (i == 0) System.out.println("INTEGERS:");
 			System.out.print("\t" + int_vnames.get(i) + " = " + int_list.get(i));
-			if (int_descriptors.get(i).length() > 0){
-				System.out.println(" DESC: " + int_descriptors.get(i));
+			if (print_descriptors && int_descriptors.get(i).length() > 0){
+				System.out.println("\n\t\tDESC: " + int_descriptors.get(i));
 			}else{
 				System.out.println();	
 			}
 		}
+		if (int_list.size() > 0) System.out.println();
 
 		//String
 		for (int i = 0 ; i < string_list.size() ; i++){
 			if (i == 0) System.out.println("STRINGS:");
 			System.out.print("\t" + string_vnames.get(i) + " = \"" + string_list.get(i) + "\"");
-			if (string_descriptors.get(i).length() > 0){
-				System.out.println(" DESC: " + string_descriptors.get(i));
+			if (print_descriptors && string_descriptors.get(i).length() > 0){
+				System.out.println("\n\t\tDESC: " + string_descriptors.get(i));
 			}else{
 				System.out.println();	
 			}
 		}
+		if (string_list.size() > 0) System.out.println();
 
 		//BOOLEANS
 		for (int i = 0 ; i < bool_list.size() ; i++){
 			if (i == 0) System.out.println("BOOLEANS:");
 			System.out.print("\t" + bool_vnames.get(i) + " = " + bool_list.get(i));
-			if (bool_descriptors.get(i).length() > 0){
-				System.out.println(" DESC: " + bool_descriptors.get(i));
+			if (print_descriptors && bool_descriptors.get(i).length() > 0){
+				System.out.println("\n\t\tDESC: " + bool_descriptors.get(i));
 			}else{
 				System.out.println();	
 			}
 		}
+		if (bool_list.size() > 0) System.out.println();
 
 		//Matrix
 		for (int i = 0 ; i < matrix_list.size() ; i++){
 			if (i == 0) System.out.println("Matricies:");
 			System.out.print("\t" + matrix_vnames.get(i) + " = " + matrix_to_string(matrix_list.get(i), true));
-			if (matrix_descriptors.get(i).length() > 0){
-				System.out.println(" DESC: " + matrix_descriptors.get(i));
+			if (print_descriptors && matrix_descriptors.get(i).length() > 0){
+				System.out.println("\n\t\tDESC: " + matrix_descriptors.get(i));
 			}else{
 				System.out.println();	
 			}
-		}		
+		}	
 
 	}
 
@@ -646,6 +690,10 @@ public class KVar{
 
 		String out = new String("[ ");
 
+		if (x.rows() == 0 || x.cols() == 0){
+			return "";
+		}
+
 		for (int r = 0 ; r+1 < x.rows() ; r++){
 			for (int c = 0 ; c+1 < x.cols() ; c++){
 				out = out + x.get(r, c) + ", ";
@@ -660,7 +708,7 @@ public class KVar{
 		return out;
 	}
 
-	private void ensure_whitespace(String str, String targets){
+	private String ensure_whitespace(String str, String targets){
 
 		for (int i = 0 ; i < str.length() ; i++){
 			for (int j = 0 ; j < targets.length() ; j++){
@@ -673,6 +721,8 @@ public class KVar{
 				}
 			}
 		}
+		
+		return str;
 	}
 
 	/*---------------------------------------*\
@@ -685,6 +735,7 @@ public class KVar{
 
 	boolean print_out;
 	boolean matrix_same_line;
+	boolean print_descriptors;
 
 	String last_filename; //Name of file to read or write
     String header;

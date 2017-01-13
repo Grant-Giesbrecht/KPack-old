@@ -56,13 +56,15 @@ public class KMatrix{
 		List<Double> vals = new ArrayList<Double>();
 
  		//Ensure whitespace!
-
+		input = ensure_whitespace(input, "[],;");
 		String[] words = input.split("\\s");
 	
 		boolean was_number;
 		double next;
 		int incr = 0;
 		for (int i = 0 ; i < words.length ; i++){
+
+			if (words[i].length() == 0) continue; //Skip blank lines
 
 			try{
 				next = Double.parseDouble(words[i]);
@@ -88,7 +90,8 @@ public class KMatrix{
 
 				//Do nothing
 
-			}else{ //Unidentified character
+			}else if(!was_number){ //Unidentified character
+				System.out.println("UC>" + words[i] + "<");
 				return false;
 			}
 
@@ -102,6 +105,23 @@ public class KMatrix{
 		}
 
 		return true;
+	}
+
+	private String ensure_whitespace(String str, String targets){
+
+		for (int i = 0 ; i < str.length() ; i++){
+			for (int j = 0 ; j < targets.length() ; j++){
+				if (str.charAt(i) == targets.charAt(j)){
+					if ( i != 0 && str.charAt(i-1) != ' '){
+						str = str.substring(0, i) + ' ' + str.substring(i);
+					}else if(i+1 < str.length() && str.charAt(i+1) != ' '){
+						str = str.substring(0, i+1) + ' ' + str.substring(i+1);
+					}
+				}
+			}
+		}
+
+		return str;
 	}
 
 	/*---------------------------------------*\
