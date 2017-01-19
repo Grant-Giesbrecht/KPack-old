@@ -14,4 +14,6 @@ void print_vector(std::vector<std::vector<double> > v, int indent=0, bool spaces
 
 std::string indent_line(int indentation, bool use_spaces=false, bool indent_in_function=true);
 
+int strvec_contains(std::vector<std::string> vec, std::string target);
+
 #endif
