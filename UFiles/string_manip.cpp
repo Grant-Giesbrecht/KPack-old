@@ -31,6 +31,35 @@ void ensure_whitespace(string& in, string targets){
 }
 
 /*
+ Ensures that space characters sandwich the target string in the string 'in'
+ 
+ in - string in which to ensure targets surrounded by whitespace
+ target - string to surround with whitespace - must appear in full to be surrounded
+ 
+ Void return
+ */
+
+void ensure_whitespace_full(string& in, string target){
+
+    //Add whitespace buffer around all target characters
+    for (int i = 0 ; i+target.length() < in.length() ; i++){
+        if (in.substr(i, target.length()) == target ){
+            in = in.substr(0, i) + " " + in.substr(i, target.length()) + " " + in.substr(i+target.length());
+            i += 1 + target.length();
+        }
+    }
+    
+    //Remove excess white space - no consecutive spaces
+    for (int i = 0; i+1 < in.length() ; i++){
+        if (in[i] == ' ' && in[i+1] == ' '){
+            in = in.substr(0, i) + in.substr(i+1);
+            i--;
+        }
+    }
+    
+}
+
+/*
  Parses a string into a vector of strings. String broken at each instance of 'delin'. 'delin' is excluded from the output.
  
  input - string to parse
