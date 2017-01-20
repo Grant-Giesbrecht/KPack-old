@@ -10,6 +10,8 @@ std::vector<std::string> parse(std::string input, std::string delin);
 
 void ensure_whitespace(std::string& in, std::string targets);
 
+void ensure_whitespace_full(std::string& in, std::string multichar_target);
+
 bool isnum(std::string s);
 
 void remove_comments(std::string& s, std::string commentor);

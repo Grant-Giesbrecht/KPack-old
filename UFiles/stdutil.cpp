@@ -72,3 +72,23 @@ string indent_line(int indentation, bool use_spaces, bool indent_in_function){
 	
 	return out;
 }
+
+
+/*
+Reports if a vector of strings contains a specific string. Reports the 1st index at which the target string is found.
+
+vec - Vector of strings to search
+target - String to search for in 'vec'
+
+Returns an int representing the first index at which 'target' is present. -1 if not present in 'vec'.
+*/
+int strvec_contains(vector<string> vec, string target){
+
+	for (int i = 0 ; i < vec.size() ; i++){
+		if (vec[i] == target){
+			return i;
+		}
+	}
+
+	return -1;
+}
