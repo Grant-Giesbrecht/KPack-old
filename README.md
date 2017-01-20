@@ -5,7 +5,7 @@ NOTE: This project is a work in progress.
 
 KPack contains 4 subdivisions, each with a specific use and a cross-platform class. It also includes one command line program (See KCalculator below)
   - KMatrix: A simple syntax yet fast matrix class
-  - KVar: A class for writing .kv1, .kv2, and .kv3 data files.
+  - KVar: A class for writing .KV1, .KV2, and .KV3 data files.
   - KPlot: A class providing basic graphing and plotting capability.
   - KComm: A class for communicating with Arduino microcontrollers over USB.
   
