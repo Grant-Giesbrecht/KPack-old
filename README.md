@@ -1,4 +1,7 @@
 # KPack
+
+*This project is no longer maintained. It has been replaced by projects Grant-Giesbrecht/gstd, KTable, KV_Spec*
+
 Software library connecting STEM fields to fast and powerful programming languages
 
 NOTE: This project is a work in progress.
